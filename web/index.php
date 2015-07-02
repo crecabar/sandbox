@@ -19,10 +19,3 @@ if (appExists($apps, $app)) {
 else {
     echo "Application " . $app . " not exists";
 }
-
-/*
-if (!empty($module)) {
-    $name = filter_input(INPUT_GET, 'name') ? : "";
-    echo render($module, ['name' => $name]);
-}
-*/
