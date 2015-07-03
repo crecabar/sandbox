@@ -1,4 +1,8 @@
 <?php
+/**
+ * Construct the application configuration based on directories
+ * founds under $appDir.
+ */
 
 if (!defined('SECURE_APP'))
     die("you should not be here");
