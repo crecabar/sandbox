@@ -1,4 +1,4 @@
 <?php
 
 echo "$indexVar<br>";
-echo '<a href="?app=frontend&module=default&action=hello">Say Hello</a>';
+echo '<a href="/index/frontend/default/hello">Say Hello</a>';
