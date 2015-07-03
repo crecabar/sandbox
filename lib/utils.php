@@ -132,10 +132,9 @@ function renderAction($module, $action, array $param = [])
 function renderReal($viewFile, array $param = [], $actionFile = null)
 {
     if (file_exists($viewFile)) {
+        extract($param);
         if (!is_null($actionFile))
             include $actionFile;
-
-        extract($param);
         ob_start();
         include($viewFile);
         return ob_get_clean();

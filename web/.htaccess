@@ -1,0 +1,7 @@
+Options +FollowSymLinks +ExecCGI
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^index/([^/]+)/([^/]+)/([^/]+)/?$ index.php?app=$1&module=$2&action=$3 [L]
+  RewriteRule ^index\.php/([^/]+)/([^/]+)/([^/]+)/?$ index.php?app=$1&module=$2&action=$3 [L]
+</IfModule>
