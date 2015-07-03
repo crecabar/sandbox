@@ -10,12 +10,27 @@ if (!defined('SECURE_APP'))
  */
 function appExists($config, $key)
 {
-    if (array_key_exists($key, $config)) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return array_key_exists($key, $config);
+}
+
+/**
+ * @param $module
+ * @param $action
+ * @return bool
+ */
+function actionExists($module, $action)
+{
+    return array_key_exists($action, $module[ACTIONS]);
+}
+
+/**
+ * @param $module
+ * @param $action
+ * @return bool
+ */
+function viewExists($module, $action)
+{
+    return array_key_exists($action, $module[VIEWS]);
 }
 
 /**
@@ -25,27 +40,21 @@ function appExists($config, $key)
  */
 function moduleExists($app, $module)
 {
-    if (array_key_exists($module, $app[MODULES]))
-        return true;
-    else
-        return false;
+    return array_key_exists($module, $app[MODULES]);
 }
 
 /**
- * @param $app
+ * @param array $app
  * @return bool
  */
 function appHasLayout($app)
 {
-    if (array_key_exists(LAYOUTS, $app))
-        return true;
-    else
-        return false;
+    return array_key_exists(LAYOUTS, $app);
 }
 
 /**
- * @param $app
- * @return mixed
+ * @param array $app
+ * @return array
  */
 function getAppModules($app)
 {
@@ -53,8 +62,8 @@ function getAppModules($app)
 }
 
 /**
- * @param $app
- * @return mixed
+ * @param array $app
+ * @return array
  */
 function getAppLayouts($app)
 {
@@ -62,8 +71,8 @@ function getAppLayouts($app)
 }
 
 /**
- * @param $app
- * @return mixed
+ * @param array$app
+ * @return string
  */
 function getAppLayoutDir($app)
 {
@@ -71,8 +80,8 @@ function getAppLayoutDir($app)
 }
 
 /**
- * @param $app
- * @return mixed
+ * @param array $app
+ * @return string
  */
 function getAppModuleDir($app)
 {
@@ -80,40 +89,61 @@ function getAppModuleDir($app)
 }
 
 /**
- * @param $app
+ * @param array $app
  * @param string $module
  * @param array $param
  * @param string $layout
  * @return string
  */
-function render($app, $module = DEFAULT_MOD, array $param = [], $layout = DEFAULT_LYOUT)
+function render($app, $module = DEFAULT_MOD, array $param = [], $layout = DEFAULT_LAYOUT)
 {
     if (!moduleExists($app, $module))
         return "Module " . $module . " not exists";
 
-    $modPath = getAppModuleDir($app) . $app[MODULES][$module];
     $lytPath = getAppLayoutDir($app) . $app[LAYOUTS][$layout];
 
-    $content = renderReal($modPath, $param);
-    $content = renderReal($lytPath, array('content' => $content));
+    $content = renderReal($lytPath, $param);
 
     return $content;
 }
 
 /**
- * @param $path
+ * @param array $module
+ * @param string $action
  * @param array $param
  * @return string
  */
-function renderReal($path, array $param = [])
+function renderAction($module, $action, array $param = [])
 {
-    if (file_exists($path)) {
+    if (!actionExists($module, $action))
+        return "Action not exists";
+
+    $actionPath = $module[ACTIONS_DIR];
+    $viewPath = $module[VIEWS_DIR];
+    $actionFile = $actionPath . $module[ACTIONS][$action];
+    $viewFile = $viewPath . $module[VIEWS][$action];
+
+    return renderReal($viewFile, $param, $actionFile);
+}
+
+/**
+ * @param string $viewFile
+ * @param array $param
+ * @param string $actionFile
+ * @return string
+ */
+function renderReal($viewFile, array $param = [], $actionFile = null)
+{
+    if (file_exists($viewFile)) {
+        if (!is_null($actionFile))
+            include $actionFile;
+
         extract($param);
         ob_start();
-        include $path;
+        include($viewFile);
         return ob_get_clean();
     }
     else {
-        return "Resource " . $path . " not found.";
+        return "Resource " . $viewFile . " not found.";
     }
 }
