@@ -26,7 +26,7 @@ if (appExists($apps, $app)) {
     else {
         $content .= "Module " . $module . " not exists";
     }
-    $content = render($apps[$app], $module, array('content' => $content));
+    $content = render($apps[$app], array('content' => $content));
 }
 else {
     $content = "Application " . $app . " not exists";

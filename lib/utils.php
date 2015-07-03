@@ -95,11 +95,8 @@ function getAppModuleDir($app)
  * @param string $layout
  * @return string
  */
-function render($app, $module = DEFAULT_MOD, array $param = [], $layout = DEFAULT_LAYOUT)
+function render($app, array $param = [], $layout = DEFAULT_LAYOUT)
 {
-    if (!moduleExists($app, $module))
-        return "Module " . $module . " not exists";
-
     $lytPath = getAppLayoutDir($app) . $app[LAYOUTS][$layout];
 
     $content = renderReal($lytPath, $param);
