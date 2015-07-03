@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/../config/secure.php';
 require_once __DIR__ . '/../config/definitions.php';
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../lib/utils.php';
@@ -9,13 +10,26 @@ if (!defined('SECURE_APP'))
 
 $app = filter_input(INPUT_GET, 'app') ? : DEFAULT_APP;
 $module = filter_input(INPUT_GET, 'module') ? : DEFAULT_MOD;
+$action = filter_input(INPUT_GET, 'action') ? : DEFAULT_ACTION;
+
+$content = "";
 
 if (appExists($apps, $app)) {
-    $name = filter_input(INPUT_GET, 'name') ?: "";
-    $params = array('name' => $name);
-
-    echo render($apps[$app], $module, $params);
+    if (moduleExists($apps[$app], $module)) {
+        if (actionExists($apps[$app][MODULES][$module], $action)) {
+            $content .= renderAction($apps[$app][MODULES][$module], $action);
+        }
+        else {
+            $content .= "Action " . $action . " not exists";
+        }
+    }
+    else {
+        $content .= "Module " . $module . " not exists";
+    }
+    $content = render($apps[$app], $module, array('content' => $content));
 }
 else {
-    echo "Application " . $app . " not exists";
+    $content = "Application " . $app . " not exists";
 }
+
+echo $content;
