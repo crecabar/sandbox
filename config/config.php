@@ -9,6 +9,10 @@ if (!defined('SECURE_APP'))
 
 // Utility functions
 /**
+ * getFiles: it gets all the files on the given path
+ * and construct an array with the structure. It is used
+ * to get all the applications, modules, actions and views.
+ *
  * @param string $path
  * @return array
  */
@@ -28,6 +32,21 @@ function getFiles($path)
     }
     return $fileList;
 
+}
+
+/**
+ * loadLibs: it gets all the libraries under $libPath and includes
+ * them for their use on the application.
+ *
+ * @param string $libPath
+ */
+function loadLibs($libPath)
+{
+    $files = scandir($libPath);
+    $files = array_diff($files, array('.', '..'));
+    foreach ($files as $file) {
+        require $libPath . $file;
+    }
 }
 // End of utility functions
 
