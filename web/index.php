@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../config/secure.php';
 require_once __DIR__ . '/../config/definitions.php';
 require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../lib/utils.php';
+loadLibs(__DIR__ . '/../lib/');
 
 if (!defined('SECURE_APP'))
     die('You should not be here');
