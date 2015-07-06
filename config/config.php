@@ -1,19 +1,33 @@
 <?php
+
 /**
+ * File config.php
+ *
  * Construct the application configuration based on directories
  * founds under $appDir.
+ *
+ * PHP version 5
+ *
+ * @category PHP
+ * @package  Nopackage
+ * @author   Cristian Recabarren <crecabar_cl@me.com>
+ * @license  http://unlicense.org Unlicense
+ * @link     https://github.com/crecabar/sandbox
  */
 
-if (!defined('SECURE_APP'))
-    die("you should not be here");
+if (!defined('SECURE_APP')) {
+    die("you should not be here"); 
+}
 
 // Utility functions
 /**
- * getFiles: it gets all the files on the given path
+ * Function getFiles:
+ * It gets all the files on the given path
  * and construct an array with the structure. It is used
  * to get all the applications, modules, actions and views.
  *
- * @param string $path
+ * @param string $path The path dir were get modules and actions
+ *
  * @return array
  */
 function getFiles($path)
@@ -25,8 +39,7 @@ function getFiles($path)
         if (strpos($file, '.')) {
             $fileName = explode('.', $file);
             $fileList[$fileName[0]] = $file;
-        }
-        else {
+        } else {
             $fileList[$file] = $file;
         }
     }
@@ -35,17 +48,20 @@ function getFiles($path)
 }
 
 /**
- * loadLibs: it gets all the libraries under $libPath and includes
+ * Function loadLibs:
+ * It gets all the libraries under $libPath and includes
  * them for their use on the application.
  *
- * @param string $libPath
+ * @param string $libPath The path where look for functions library files
+ *
+ * @return void
  */
 function loadLibs($libPath)
 {
     $files = scandir($libPath);
     $files = array_diff($files, array('.', '..'));
     foreach ($files as $file) {
-        require $libPath . $file;
+        include $libPath . $file;
     }
 }
 // End of utility functions
@@ -63,7 +79,7 @@ foreach ($appList as $key => $app) {
     $modules = getFiles($modulePath);
     $layouts = getFiles($layoutPath);
 
-    foreach ($modules as $module){
+    foreach ($modules as $module) {
         $actionsPath = $modulePath . $module . '/' . ACTIONS . '/';
         $viewsPath = $modulePath . $module . '/' . VIEWS . '/';
         $actions = getFiles($actionsPath);
